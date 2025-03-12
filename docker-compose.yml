@@ -6,11 +6,15 @@ networks:
 # Definizione dei volumi per persistere i dati
 volumes:
   pihole_data:
- 
+  nginx_proxy_manager_data:
+  nginx_proxy_manager_certs:
+
 services:
+
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
+    restart: unless-stopped
     ports:
       # DNS Ports
       - "53:53/tcp"
@@ -25,4 +29,17 @@ services:
       - app_network
     volumes:
       - 'pihole_data:/etc/pihole'
+
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8081:81"
+    networks:
+      - app_network
+    volumes:
+      - nginx_proxy_manager_data:/data
+      - nginx_proxy_manager_certs:/etc/letsencrypt
