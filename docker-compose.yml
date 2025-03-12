@@ -64,6 +64,9 @@ services:
       - immich-database
     healthcheck:
       disable: false
+    environment:
+      REDIS_HOSTNAME: immich-redis
+      DB_HOSTNAME: immich-database
     networks:
       - app_network
     volumes:
